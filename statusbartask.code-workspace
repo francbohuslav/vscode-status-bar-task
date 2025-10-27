@@ -1,0 +1,18 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "typescript.tsc.autoDetect": "off",
+    "cSpell.words": ["statusbartask"],
+    "editor.defaultFormatter": "biomejs.biome",
+    "[json]": {
+      "editor.defaultFormatter": "biomejs.biome"
+    },
+    "[typescript]": {
+      "editor.defaultFormatter": "biomejs.biome"
+    }
+  }
+}
