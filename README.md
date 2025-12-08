@@ -272,7 +272,7 @@ When the `.statusBarTask.json` file changes, the extension will prompt you to ap
 
 ## 📝 License
 
-[MIT](LICENSE) © Bohuslav Franc
+[MIT](https://github.com/francbohuslav/vscode-status-bar-task/blob/1.0.10/LICENSE.md) © Bohuslav Franc
 
 ## 🔗 Links
 
