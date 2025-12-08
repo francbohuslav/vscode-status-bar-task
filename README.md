@@ -203,7 +203,7 @@ The `problemMatcher` allows you to extract file paths and line numbers from comm
 
 - **⌚**: Task is pending/waiting to run
 - **🔃**: Task is currently running
-- **✅**: Task completed successfully (shows execution time)
+- **12.3 s**: Task completed successfully (shows execution time)
 - **❌**: Task failed (shows error count)
 - **Gray color**: Task is disabled
 
