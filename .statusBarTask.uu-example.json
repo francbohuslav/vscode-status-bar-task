@@ -1,0 +1,37 @@
+{
+  "syncScriptsDelay": 2000,
+  "syncScripts": [
+    {
+      "label": "HI Eslint",
+      "command": "cd uu_app_maing01-hi & npx eslint .\\src --no-color",
+      "problemMatcher": {
+        "matchPattern": "^(.*(:?uu_app_maing01-hi\\\\src).*)$",
+        "replacePattern": "${1}"
+      }
+    },
+    {
+      "label": "HI Tests",
+      "command": "cd uu_app_maing01-hi & npm run test",
+      "problemMatcher": {
+        "matchPattern": "^FAIL (\\S+)",
+        "replacePattern": "${workspaceFolder}/uu_app_maing01-hi/${1}"
+      }
+    },
+    {
+      "label": "Server Eslint",
+      "command": "cd uu_app_maing01-server & npx eslint .\\app .\\test --no-color",
+      "problemMatcher": {
+        "matchPattern": "^(.*(:?uu_app_maing01-server\\\\)(:?app|test).*)$",
+        "replacePattern": "${1}"
+      }
+    },
+    {
+      "label": "Server Tests",
+      "command": "cd uu_app_maing01-server & npm run test",
+      "problemMatcher": {
+        "matchPattern": "^FAIL (\\S+)",
+        "replacePattern": "${workspaceFolder}/uu_app_maing01-server/${1}"
+      }
+    }
+  ]
+}

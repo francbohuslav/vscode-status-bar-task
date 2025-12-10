@@ -2,7 +2,7 @@
   "name": "statusbartask",
   "displayName": "StatusBarTask",
   "description": "Executes external tasks and shows their results in status bar",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "author": "Bohuslav Franc",
   "repository": {
     "type": "git",

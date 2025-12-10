@@ -105,6 +105,12 @@ The extension looks for `.statusBarTask.json` in:
 1. Workspace root directory
 2. Parent directory (one level up from workspace)
 
+
+#### uu5 Framework (NodeJS)
+
+For a complete example configuration for a NodeJS application based on the uu5 framework, see [`.statusBarTask.uu-example.json`](.statusBarTask.uu-example.json) in the repository.
+
+
 ### Configuration Schema
 
 ```json
