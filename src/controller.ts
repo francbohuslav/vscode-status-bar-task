@@ -230,10 +230,10 @@ export class Controller {
       if (fileAndLine) {
         const match = fileAndLine.match(/^(.+?)(:\d+)?(:\d+)?$/);
         if (match) {
-          const filePath = match[1].replace("\\", "/");
+          const filePath = match[1].replace(/\\/g, "/");
           const file = vscode.Uri.file(filePath);
-          const lineNumber = parseInt((match[2] || "1").replace(":", ""), 10) - 1;
-          const columnNumber = parseInt((match[3] || "1").replace(":", ""), 10) - 1;
+          const lineNumber = Math.max(0, parseInt((match[2] || "1").replace(":", ""), 10) - 1);
+          const columnNumber = Math.max(0, parseInt((match[3] || "1").replace(":", ""), 10) - 1);
           try {
             await vscode.window.showTextDocument(file, {
               selection: new vscode.Range(lineNumber, columnNumber, lineNumber, columnNumber),
