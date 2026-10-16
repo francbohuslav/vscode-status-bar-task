@@ -19,7 +19,7 @@ export namespace Scheme {
     delayTimer?: NodeJS.Timeout;
     isRunning: boolean;
     isPending: boolean;
-    lastErrorList: string[];
+    lastErrorList: ErrorItem[];
     /** Index of error to show on click */
     errorClickIndex: number;
     statusBarItem: vscode.StatusBarItem;
@@ -32,5 +32,13 @@ export namespace Scheme {
   export interface ProblemMatcher {
     matchPattern: string;
     replacePattern: string;
+    /** Optional template of the error message shown in the tooltip, supports `${0}`, `${1}`,... Default is the whole matched text. */
+    messagePattern?: string;
+  }
+
+  export interface ErrorItem {
+    /** File path with optional line and column, e.g. `/path/file.ts:10:5` */
+    location: string;
+    message: string;
   }
 }

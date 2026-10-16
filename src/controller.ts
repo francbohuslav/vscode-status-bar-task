@@ -225,7 +225,9 @@ export class Controller {
   public async goToError(scriptCode: string): Promise<void> {
     const script = this.scriptsByCode.get(scriptCode);
     if (script && script.lastErrorList.length > 0) {
-      const fileAndLine = script.lastErrorList[script.errorClickIndex];
+      const errorItem = script.lastErrorList[script.errorClickIndex];
+      const fileAndLine = errorItem.location;
+      script.statusBarItem.tooltip = `${script.errorClickIndex + 1}/${script.lastErrorList.length}: ${errorItem.message}\n${fileAndLine}`;
       script.errorClickIndex = (script.errorClickIndex + 1) % script.lastErrorList.length;
       if (fileAndLine) {
         const match = fileAndLine.match(/^(.+?)(:\d+)?(:\d+)?$/);
@@ -326,24 +328,19 @@ export class Controller {
         const result = [err?.message, stderr.trim(), stdout.trim()].join("\n").trim();
         this.logToOutput(`${script.label}: Output: ${result.trim()}`);
 
-        const lastErrorSet = new Set<string>();
+        const errorsByKey = new Map<string, Scheme.ErrorItem>();
+        const applyTemplate = (template: string, match: RegExpMatchArray) =>
+          template
+            // biome-ignore lint/suspicious/noTemplateCurlyInString: this is correct
+            .replace("${workspaceFolder}", this.workspaceFolder!)
+            // Replace ${0}, ${1},... by match
+            .replaceAll(/\$\{(\d+)\}/g, (_, indexStr) => match[parseInt(indexStr, 10)] ?? "");
         if (script.problemMatcher) {
-          const matches = result.matchAll(new RegExp(script.problemMatcher.matchPattern, "gm"));
-          for (const match of matches) {
-            let errorLine = match[0];
-            if (script.problemMatcher.replacePattern) {
-              errorLine = script.problemMatcher.replacePattern;
-              errorLine = errorLine.replace(
-                // biome-ignore lint/suspicious/noTemplateCurlyInString: this is correct
-                "${workspaceFolder}",
-                this.workspaceFolder!,
-              );
-              // Replace ${0}, ${1},... by match
-              errorLine = errorLine.replaceAll(/\$\{(\d+)\}/g, (_, indexStr) => {
-                return match[parseInt(indexStr, 10)];
-              });
-            }
-            lastErrorSet.add(errorLine);
+          const matcher = script.problemMatcher;
+          for (const match of result.matchAll(new RegExp(matcher.matchPattern, "gm"))) {
+            const location = matcher.replacePattern ? applyTemplate(matcher.replacePattern, match) : match[0];
+            const message = matcher.messagePattern ? applyTemplate(matcher.messagePattern, match) : match[0];
+            errorsByKey.set(`${location}\n${message}`, { location, message });
           }
         } else {
           result
@@ -351,17 +348,20 @@ export class Controller {
             .map((l) => l.trim())
             .filter((l) => l.length > 0)
             .forEach((l) => {
-              lastErrorSet.add(l);
+              errorsByKey.set(l, { location: l, message: l });
             });
         }
-        script.lastErrorList = [...lastErrorSet];
-        script.lastErrorList.sort();
+        script.lastErrorList = [...errorsByKey.values()];
+        script.lastErrorList.sort((a, b) => a.location.localeCompare(b.location));
         const isError = script.lastErrorList.length > 0;
         script.errorClickIndex = 0;
 
         statusBarItem.text =
           script.label +
           (isError ? ` $(error) ${script.lastErrorList.length}x` : ` ${((end - start) / 1000).toFixed(2)} s`);
+        statusBarItem.tooltip = isError
+          ? `${script.lastErrorList.length}x, first: ${script.lastErrorList[0].message}`
+          : undefined;
         statusBarItem.backgroundColor = new vscode.ThemeColor(
           isError ? "statusBarItem.errorBackground" : "statusBarItem.successBackground",
         );

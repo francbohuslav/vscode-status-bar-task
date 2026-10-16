@@ -167,6 +167,7 @@ The `problemMatcher` allows you to extract file paths and line numbers from comm
 - **`replacePattern`**: Template string to format the file path:
   - `${workspaceFolder}` - Replaced with workspace root path
   - `${0}`, `${1}`, `${2}`, etc. - Replaced with regex capture groups
+- **`messagePattern`** (optional): Template of the error message shown in the status bar item tooltip (same placeholders as `replacePattern`). Defaults to the whole matched text.
 
 ### Example Configurations
 
